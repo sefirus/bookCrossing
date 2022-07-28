@@ -13,6 +13,5 @@ public class Picture
     public Publisher? Publisher { get; set; }
     public int ShelfId { get; set; }
     public Shelf? Shelf { get; set; }
-    public int UserId { get; set; }
     public User? User { get; set; }
 }

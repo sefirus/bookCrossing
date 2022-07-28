@@ -23,22 +23,25 @@ public class PictureConfiguration : IEntityTypeConfiguration<Picture>
         builder
             .HasOne<Book>(p => p.Book)
             .WithMany(b => b.Pictures)
-            .HasForeignKey(p => p.BookId);
-        
+            .HasForeignKey(p => p.BookId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder
             .HasOne<Publisher>(p => p.Publisher)
             .WithMany(p => p.Pictures)
-            .HasForeignKey(p => p.PublisherId);
+            .HasForeignKey(p => p.PublisherId)
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder
             .HasOne<Shelf>(p => p.Shelf)
             .WithMany(p => p.Pictures)
-            .HasForeignKey(p => p.ShelfId);
+            .HasForeignKey(p => p.ShelfId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        builder
-            .HasOne<User>(p => p.User)
-            .WithOne(p => p.ProfilePicture)
-            .HasForeignKey<Picture>(p => p.UserId);
+        // builder
+        //     .HasOne<User>(p => p.User)
+        //     .WithOne(p => p.ProfilePicture)
+        //     .HasForeignKey<Picture>(p => p.UserId);
 
         builder
             .ToTable("Pictures");

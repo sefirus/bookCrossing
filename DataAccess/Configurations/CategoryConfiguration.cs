@@ -22,7 +22,8 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder
             .HasOne<Category>(c => c.PrentCategory)
             .WithMany(c => c.ChildCategories)
-            .HasForeignKey(c => c.ParentCategoryId);
+            .HasForeignKey(c => c.ParentCategoryId)
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder
             .ToTable("Categories");

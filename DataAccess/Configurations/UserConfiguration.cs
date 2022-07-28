@@ -20,6 +20,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(50);
 
         builder
+            .HasOne<Picture>(u => u.ProfilePicture)
+            .WithOne(p => p.User)
+            .HasForeignKey<User>(u => u.ProfilePictureId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
             .ToTable("Users");
     }
 }

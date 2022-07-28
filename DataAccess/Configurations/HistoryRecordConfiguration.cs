@@ -18,17 +18,20 @@ public class HistoryRecordConfiguration : IEntityTypeConfiguration<HistoryRecord
         builder
             .HasOne<BookCopy>(hr => hr.BookCopy)
             .WithMany(bc => bc.HistoryRecords)
-            .HasForeignKey(hr => hr.BookCopyId);
+            .HasForeignKey(hr => hr.BookCopyId)
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder
             .HasOne<User>(hr => hr.User)
             .WithMany(bc => bc.HistoryRecords)
-            .HasForeignKey(hr => hr.UserId);
+            .HasForeignKey(hr => hr.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder
             .HasOne<Shelf>(hr => hr.Shelf)
             .WithMany(bc => bc.HistoryRecords)
-            .HasForeignKey(hr => hr.ShelfId);
+            .HasForeignKey(hr => hr.ShelfId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .ToTable("HistoryRecords");

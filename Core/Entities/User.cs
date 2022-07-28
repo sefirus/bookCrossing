@@ -8,6 +8,7 @@ public class User : IdentityUser<int>
     public string? LastName { get; set; }
     public DateTime BirthDate { get; set; }
     public bool IsActive { get; set; } = true;
+    public Guid ProfilePictureId { get; set; }
     public Picture? ProfilePicture { get; set; }
     public IEnumerable<Comment> Comments { get; set; } 
         = new List<Comment>();    
