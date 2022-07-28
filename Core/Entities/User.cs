@@ -9,6 +9,10 @@ public class User : IdentityUser<int>
     public DateTime BirthDate { get; set; }
     public bool IsActive { get; set; } = true;
     public Picture? ProfilePicture { get; set; }
-    public IEnumerable<Comment> Comments { get; set; } = new List<Comment>();
+    public IEnumerable<Comment> Comments { get; set; } 
+        = new List<Comment>();    
+    public IEnumerable<BookCopy> CurrentBooks { get; set; } 
+        = new List<BookCopy>();
     public IEnumerable<HistoryRecord> HistoryRecords { get; set; }
+        = new List<HistoryRecord>();
 }

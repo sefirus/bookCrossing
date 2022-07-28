@@ -7,7 +7,7 @@ namespace DataAccess.Context;
 
 public class BookCrossingContext : IdentityDbContext<User, IdentityRole<int>, int>
 {
-    public DbSet<Author> Authors { get; set; }
+    public DbSet<Writer> Authors { get; set; }
     public DbSet<Book> Books { get; set; }
     public DbSet<BookCopy> BookCopies { get; set; }
     public DbSet<Category> Categories { get; set; }    

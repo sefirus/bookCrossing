@@ -1,9 +1,9 @@
 ﻿namespace Core.Entities;
 
-public class BookAuthor
+public class BookWriter
 {
     public int BookId { get; set; }
-    public int AuthorId { get; set; }
+    public int WriterId { get; set; }
     public Book Book { get; set; }
-    public Author Author { get; set; }
+    public Writer Writer { get; set; }
 }
