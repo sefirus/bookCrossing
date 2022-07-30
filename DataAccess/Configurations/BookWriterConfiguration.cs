@@ -9,10 +9,10 @@ public class BookWriterConfiguration : IEntityTypeConfiguration<BookWriter>
     public void Configure(EntityTypeBuilder<BookWriter> builder)
     {
         builder
-            .HasKey(ps => new
+            .HasKey(bw => new
             {
-                ps.BookId,
-                ps.WriterId
+                bw.BookId,
+                bw.WriterId
             });
 
         builder

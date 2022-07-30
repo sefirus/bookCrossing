@@ -28,19 +28,9 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
             .Property(b => b.Isbn)
             .HasMaxLength(50);
 
-        // builder
-        //     .HasMany<Picture>(b => b.Pictures)
-        //     .WithOne(p => p.Book)
-        //     .HasForeignKey(b => b.BookId);
-
         builder
             .Property(b => b.Language)
             .HasMaxLength(20);
-
-        builder
-            .HasOne<Category>(b => b.Category)
-            .WithMany(c => c.Books)
-            .HasForeignKey(b => b.CategoryId);
 
         builder
             .ToTable("Books");
