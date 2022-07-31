@@ -142,7 +142,7 @@ namespace DataAccess.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int>("ParentCategoryId")
+                    b.Property<int?>("ParentCategoryId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -150,6 +150,238 @@ namespace DataAccess.Migrations
                     b.HasIndex("ParentCategoryId");
 
                     b.ToTable("Categories", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "",
+                            Name = ""
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "",
+                            Name = "Magazines",
+                            ParentCategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "",
+                            Name = "Fiction",
+                            ParentCategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "",
+                            Name = "Non-Fiction",
+                            ParentCategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "",
+                            Name = "Handbooks",
+                            ParentCategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "",
+                            Name = "Uncategorized",
+                            ParentCategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "",
+                            Name = "Detective",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "",
+                            Name = "Prose",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "",
+                            Name = "Sci-Fi",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "",
+                            Name = "Fantasy",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "",
+                            Name = "Horrors",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "",
+                            Name = "Poetry",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Description = "",
+                            Name = "Drama",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Description = "",
+                            Name = "Historical Novels",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "",
+                            Name = "Esotericism",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Description = "",
+                            Name = "Business",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Description = "",
+                            Name = "Social",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Description = "",
+                            Name = "Biographies",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Description = "",
+                            Name = "Economics",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Description = "",
+                            Name = "Technical literature",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Description = "",
+                            Name = "Science",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Description = "",
+                            Name = "Philosophy",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Description = "",
+                            Name = "Motivational literature",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Description = "",
+                            Name = "Religion",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Description = "",
+                            Name = "Self Development",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Description = "",
+                            Name = "Hobbies",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Description = "",
+                            Name = "Reference books",
+                            ParentCategoryId = 5
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Description = "",
+                            Name = "Encyclopedias",
+                            ParentCategoryId = 5
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Description = "",
+                            Name = "Reference books",
+                            ParentCategoryId = 5
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Description = "",
+                            Name = "Educational Literature",
+                            ParentCategoryId = 5
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Description = "",
+                            Name = "Dictionaries",
+                            ParentCategoryId = 5
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Description = "",
+                            Name = "Maps",
+                            ParentCategoryId = 5
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Description = "",
+                            Name = "Atlases",
+                            ParentCategoryId = 5
+                        });
                 });
 
             modelBuilder.Entity("Core.Entities.Comment", b =>
@@ -626,8 +858,7 @@ namespace DataAccess.Migrations
                     b.HasOne("Core.Entities.Category", "PrentCategory")
                         .WithMany("ChildCategories")
                         .HasForeignKey("ParentCategoryId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("PrentCategory");
                 });

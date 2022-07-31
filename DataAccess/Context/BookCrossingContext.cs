@@ -27,5 +27,6 @@ public class BookCrossingContext : IdentityDbContext<User, IdentityRole<int>, in
             
         builder.ApplyConfigurationsFromAssembly(GetType().Assembly);
 
+        builder.SeedCategories();
     }
 }

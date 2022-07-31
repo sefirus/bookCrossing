@@ -20,6 +20,10 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .HasMaxLength(600);
 
         builder
+            .Property(c => c.ParentCategoryId)
+            .IsRequired(false);
+
+        builder
             .HasOne<Category>(c => c.PrentCategory)
             .WithMany(c => c.ChildCategories)
             .HasForeignKey(c => c.ParentCategoryId)
