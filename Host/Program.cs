@@ -1,4 +1,5 @@
 using BookCrossingBackEnd.Configuration;
+using BookCrossingBackEnd.Middleware;
 using Core.Entities;
 using DataAccess.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -46,7 +47,6 @@ builder.Services.AddAuthentication(options => {
         {
             ClockSkew = TimeSpan.Zero
         };
-        //options.AddAuthenticationForSignalRHubs();
     });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -65,6 +65,6 @@ app.UseCors(SystemServicesConfiguration.AllowedOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-//app.MapHub<MessageHub>("/hubs/messages");
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();
