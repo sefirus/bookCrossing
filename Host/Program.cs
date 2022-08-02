@@ -1,12 +1,14 @@
 using BookCrossingBackEnd.Configuration;
 using BookCrossingBackEnd.Middleware;
 using Core.Entities;
+using Core.Interfaces.Mappers;
 using DataAccess.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
+using WebApi.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +53,8 @@ builder.Services.AddAuthentication(options => {
             ClockSkew = TimeSpan.Zero
         };
     });
+
+builder.Services.AddTransient(typeof(IPagedVmMapper<,>), typeof(GenericPagedMapper<,>));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
