@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Application.Configurations;
 using BookCrossingBackEnd.Configuration;
 using BookCrossingBackEnd.Middleware;
@@ -10,7 +11,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
+using WebApi.Controllers;
 using WebApi.Mappers;
+using WebApi.Mappers.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +28,7 @@ builder.Services.AddControllers(options =>
 builder.Services.AddSystemServices();
 builder.Services.AddRepositories();
 builder.Services.AddApplicationServices();
+builder.Services.AddApplicationMappers();
 
 builder.Services.AddDbContext<BookCrossingContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -57,6 +61,17 @@ builder.Services.AddAuthentication(options => {
             ClockSkew = TimeSpan.Zero
         };
     });
+
+builder.Services
+    .AddControllers(options =>
+    {
+        options.SuppressAsyncSuffixInActionNames = false;
+    })
+    .AddJsonOptions(jsonOptions =>
+    {
+        jsonOptions.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    })
+    .AddApplicationPart(typeof(CategoryController).Assembly);
 
 builder.Services.AddTransient(typeof(IPagedVmMapper<,>), typeof(GenericPagedMapper<,>));
 
