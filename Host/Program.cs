@@ -3,6 +3,7 @@ using BookCrossingBackEnd.Middleware;
 using Core.Entities;
 using Core.Interfaces.Mappers;
 using DataAccess.Context;
+using DataAccess.Repositories.DiConfiguration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ builder.Services.AddControllers(options =>
 });
 
 builder.Services.AddSystemServices();
+builder.Services.AddRepositories();
 
 builder.Services.AddDbContext<BookCrossingContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
