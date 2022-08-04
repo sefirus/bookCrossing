@@ -1,4 +1,7 @@
-﻿namespace BookCrossingBackEnd.Configuration;
+﻿using Application.Services;
+using Core.Interfaces.Services;
+
+namespace BookCrossingBackEnd.Configuration;
 
 public static class SystemServicesConfiguration
 {
@@ -7,6 +10,7 @@ public static class SystemServicesConfiguration
     public static void AddSystemServices(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
+        services.AddTransient<ILoggerManager, LoggerManager>();
 
         services.AddCors(options =>
         {

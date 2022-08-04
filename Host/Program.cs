@@ -1,3 +1,4 @@
+using Application.Configurations;
 using BookCrossingBackEnd.Configuration;
 using BookCrossingBackEnd.Middleware;
 using Core.Entities;
@@ -23,6 +24,7 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddSystemServices();
 builder.Services.AddRepositories();
+builder.Services.AddApplicationServices();
 
 builder.Services.AddDbContext<BookCrossingContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
