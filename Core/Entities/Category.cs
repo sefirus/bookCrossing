@@ -11,5 +11,4 @@ public class Category
     public Category PrentCategory { get; set; }
     public IEnumerable<Category> ChildCategories { get; set; } 
         = new List<Category>();
-
 }

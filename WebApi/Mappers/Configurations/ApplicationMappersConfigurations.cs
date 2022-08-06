@@ -10,6 +10,9 @@ public static class ApplicationMappersConfigurations
 {
     public static void AddApplicationMappers(this IServiceCollection services)
     {
+        services.AddTransient(typeof(IPagedVmMapper<,>), typeof(GenericPagedMapper<,>));
+
         services.AddTransient<IVmMapper<Category, ReadCategoryViewModel>, ReadCategoryVmMapper>();
+        services.AddTransient<IVmMapper<CreateCategoryViewModel, Category>, CreateCategoryVmMapper>();
     }
 }
