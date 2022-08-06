@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Core.Exceptions;
 using Core.ViewModels.ExceptionViewModels;
 
 namespace BookCrossingBackEnd.Middleware;
@@ -17,6 +18,14 @@ public class ExceptionMiddleware
         try
         {
             await _next(context);
+        }
+        catch (NotFoundException e)
+        {
+            await HandleExceptionAsync(context, HttpStatusCode.NotFound, e.Message);
+        }
+        catch (BadRequestException e)
+        {
+            await HandleExceptionAsync(context, HttpStatusCode.BadRequest, e.Message);
         }
         catch (Exception e)
         {
