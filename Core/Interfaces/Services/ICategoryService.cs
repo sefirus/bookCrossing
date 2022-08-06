@@ -7,5 +7,5 @@ public interface ICategoryService
     Task<Category> GetTreeAsync();
     Task CreateCategoryAsync(Category newCategory);
     Task DeleteCategoryAsync(int categoryId);
-    Task RenameCategoryAsync(int categoryId, string newName);
+    Task UpdateCategoryAsync(int categoryId, string newName, string newDescription);
 }

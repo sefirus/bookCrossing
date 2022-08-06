@@ -25,7 +25,7 @@ public class CategoryController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ReadCategoryViewModel> GetCatalog()
+    public async Task<ReadCategoryViewModel> GetCatalogAsync()
     {
         var category = await _categoryService.GetTreeAsync();
         var viewModel = _readMapper.Map(category);
@@ -33,15 +33,21 @@ public class CategoryController : ControllerBase
     }    
     
     [HttpDelete("{id:int:min(1)}")]
-    public async Task DeleteCategoryById([FromRoute]int id)
+    public async Task DeleteCategoryByIdAsync([FromRoute]int id)
     {
         await _categoryService.DeleteCategoryAsync(id);
     }
 
     [HttpPost]
-    public async Task CreateCategory(CreateCategoryViewModel viewModel)
+    public async Task CreateCategoryAsync([FromBody]CreateCategoryViewModel viewModel)
     {
         var category = _createMapper.Map(viewModel);
         await _categoryService.CreateCategoryAsync(category);
+    }
+
+    [HttpPut]
+    public async Task UpdateCategoryAsync([FromBody] UpdateCategoryViewModel viewModel)
+    {
+        await _categoryService.UpdateCategoryAsync(viewModel.Id, viewModel.Name, viewModel.Description);
     }
 }

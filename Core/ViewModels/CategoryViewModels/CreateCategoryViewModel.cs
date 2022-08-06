@@ -1,8 +1,6 @@
 ﻿namespace Core.ViewModels.CategoryViewModels;
 
-public class CreateCategoryViewModel
+public class CreateCategoryViewModel : CategoryVmBase
 {
-    public string Name { get; set; } 
-    public string Description { get; set; }
     public int? ParentCategoryId { get; set; }
 }

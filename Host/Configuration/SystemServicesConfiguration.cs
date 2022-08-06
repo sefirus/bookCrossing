@@ -2,9 +2,12 @@
 using Core.Entities;
 using Core.Interfaces.Services;
 using DataAccess.Context;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using WebApi.Validators.CategoryValidators;
 
 namespace BookCrossingBackEnd.Configuration;
 
@@ -16,6 +19,11 @@ public static class SystemServicesConfiguration
     {
         services.AddHttpContextAccessor();
         services.AddTransient<ILoggerManager, LoggerManager>();
+        
+        services.AddFluentValidation(fv =>
+        {
+            fv.RegisterValidatorsFromAssemblyContaining<UpdateCategoryValidator>();
+        });
 
         services.AddCors(options =>
         {

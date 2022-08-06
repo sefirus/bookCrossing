@@ -79,10 +79,11 @@ public class CategoryService : ICategoryService
         await _repository.SaveChangesAsync();
     }
 
-    public async Task RenameCategoryAsync(int categoryId, string newName)
+    public async Task UpdateCategoryAsync(int categoryId, string newName, string newDescription)
     {
         var category = await GetByIdAsync(categoryId);
         category.Name = newName;
+        category.Description = newDescription;
         await _repository.SaveChangesAsync();
     }
 }
