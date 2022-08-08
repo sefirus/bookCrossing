@@ -25,6 +25,8 @@ public static class SystemServicesConfiguration
             fv.RegisterValidatorsFromAssemblyContaining<UpdateCategoryValidator>();
         });
 
+        services.AddHttpClient();
+
         services.AddCors(options =>
         {
             options.AddPolicy(name: AllowedOrigins,

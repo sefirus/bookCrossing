@@ -1,4 +1,4 @@
-﻿namespace Core.ViewModels.BookViewModels.GoogleApiRequests;
+﻿namespace Core.ViewModels.BookViewModels.GoogleBookApiRequests;
 
 public class VolumeViewModel
 {

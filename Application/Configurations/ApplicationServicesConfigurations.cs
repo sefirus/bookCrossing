@@ -9,5 +9,6 @@ public static class ApplicationServicesConfigurations
     public static void AddApplicationServices(this IServiceCollection services)
     {
         services.AddTransient<ICategoryService, CategoryService>();
+        services.AddTransient<IBookService, BookService>();
     }
 }

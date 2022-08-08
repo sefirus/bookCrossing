@@ -29,7 +29,7 @@ public class ExceptionMiddleware
         }
         catch (Exception e)
         {
-            await HandleExceptionAsync(context, HttpStatusCode.InternalServerError, e.GetType().Name);
+            await HandleExceptionAsync(context, HttpStatusCode.InternalServerError, e.GetType().Name + e.StackTrace);
         }
     }
     
