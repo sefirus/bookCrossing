@@ -17,7 +17,8 @@ public class WriterConfiguration : IEntityTypeConfiguration<Writer>
 
         builder
             .Property(u => u.Description)
-            .HasMaxLength(1000);
+            .HasMaxLength(1000)
+            .IsRequired(false);
 
         builder
             .ToTable("Writers");

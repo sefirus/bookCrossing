@@ -26,6 +26,7 @@ public class CategoryService : ICategoryService
             throw new NotFoundException($"There is no category with id {categoryId}");
         }
 
+        _logger.LogInfo($"Found category with Id {categoryId}");
         return category;
     }
     
@@ -44,6 +45,7 @@ public class CategoryService : ICategoryService
             _logger.LogWarn("There is no parent category");
             throw new NotFoundException("There is no parent category");
         }
+        _logger.LogInfo($"Found category tree");
         return root;
     }
 
@@ -77,6 +79,7 @@ public class CategoryService : ICategoryService
         }
         _repository.Delete(categoryToDelete);
         await _repository.SaveChangesAsync();
+        _logger.LogInfo($"Deleted category with Id {categoryId}");
     }
 
     public async Task UpdateCategoryAsync(int categoryId, string newName, string newDescription)
@@ -85,5 +88,6 @@ public class CategoryService : ICategoryService
         category.Name = newName;
         category.Description = newDescription;
         await _repository.SaveChangesAsync();
+        _logger.LogInfo($"Updated category with Id {categoryId}");
     }
 }

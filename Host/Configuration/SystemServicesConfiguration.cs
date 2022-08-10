@@ -19,6 +19,7 @@ public static class SystemServicesConfiguration
     {
         services.AddHttpContextAccessor();
         services.AddTransient<ILoggerManager, LoggerManager>();
+        services.AddMemoryCache();
         
         services.AddFluentValidation(fv =>
         {

@@ -18,7 +18,13 @@ public class BookController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<SearchBookViewModel>> SearchBookAsync([FromQuery] string request)
     {
-        var searchResults = await _bookService.GetBookSearchResultsAsync(request);
+        var searchResults = await _bookService.SearchBookAsync(request);
         return searchResults;
+    }
+
+    [HttpPost]
+    public async Task PostBookAsync([FromBody] SearchBookViewModel model)
+    {
+        await _bookService.AddBookToLibraryAsync(model);
     }
 }

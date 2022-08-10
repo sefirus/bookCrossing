@@ -17,7 +17,8 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
         
         builder
             .Property(b => b.Description)
-            .HasMaxLength(1500);
+            .HasMaxLength(1500)
+            .IsRequired(false);
 
         builder
             .HasOne<Publisher>(b => b.Publisher)
