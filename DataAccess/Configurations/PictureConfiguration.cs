@@ -13,36 +13,35 @@ public class PictureConfiguration : IEntityTypeConfiguration<Picture>
 
         builder
             .Property(p => p.FullPath)
-            .HasMaxLength(75);
+            .HasMaxLength(300);
 
         builder
             .HasOne<Writer>(p => p.Writer)
             .WithMany(w => w.Pictures)
-            .HasForeignKey(p => p.WriterId);
+            .HasForeignKey(p => p.WriterId)
+            .IsRequired(false);
                 
         builder
             .HasOne<Book>(p => p.Book)
             .WithMany(b => b.Pictures)
             .HasForeignKey(p => p.BookId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Restrict)            
+            .IsRequired(false);
 
         builder
             .HasOne<Publisher>(p => p.Publisher)
             .WithMany(p => p.Pictures)
             .HasForeignKey(p => p.PublisherId)
-            .OnDelete(DeleteBehavior.Restrict);
-        
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
+
         builder
             .HasOne<Shelf>(p => p.Shelf)
             .WithMany(p => p.Pictures)
             .HasForeignKey(p => p.ShelfId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        // builder
-        //     .HasOne<User>(p => p.User)
-        //     .WithOne(p => p.ProfilePicture)
-        //     .HasForeignKey<Picture>(p => p.UserId);
-
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
+        
         builder
             .ToTable("Pictures");
     }
