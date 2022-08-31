@@ -40,6 +40,35 @@ public class BookService : IBookService
         _writerRepository = writerRepository;
     }
     
+    private List<SearchBookViewModel> MapSearchBookViewModels(BookApiSearchResponse bookApiSearchResponse)
+    {
+        var searchBookViewModels = new List<SearchBookViewModel>();
+        foreach (var volume in bookApiSearchResponse.Items)
+        {
+            var volumeAuthors = string.Empty;
+            var authorsList = volume.VolumeInfo.Authors.ToList();
+            if (authorsList.Count > 0)
+            {
+                for (int i = 0; i < authorsList.Count - 1; i++)
+                {
+                    volumeAuthors = $"{volumeAuthors}{authorsList[i]}, ";
+                }
+                volumeAuthors = $"{volumeAuthors}{authorsList.Last()}";
+            }
+
+            searchBookViewModels.Add(new SearchBookViewModel()
+            {
+                Id = volume.Id,
+                ThumbnailLink = volume.VolumeInfo.ImageLinks?.Thumbnail,
+                Title = volume.VolumeInfo.Title,
+                Authors = volumeAuthors,
+                SearchResultType = SearchResultType.GoogleBookApi
+            });
+        }
+
+        return searchBookViewModels;
+    }
+    
     private async Task<IEnumerable<SearchBookViewModel>> SearchInApiAsync(string uri)
     {
         var httpClient = _clientFactory.CreateClient();
@@ -51,28 +80,7 @@ public class BookService : IBookService
             return Enumerable.Empty<SearchBookViewModel>();
         }
         
-        var searchResults = new List<SearchBookViewModel>();
-        foreach (var volume in tempResponse.Items)
-        {
-            var volumeAuthors = string.Empty;
-            var authorsList = volume.VolumeInfo.Authors.ToList();
-            if(authorsList.Count > 0)
-            {
-                for (int i = 0; i < authorsList.Count - 1; i++)
-                {
-                    volumeAuthors = $"{volumeAuthors}{authorsList[i]}, ";
-                }
-                volumeAuthors = $"{volumeAuthors}{authorsList.Last()}";
-            }
-            searchResults.Add(new SearchBookViewModel()
-            {
-                Id = volume.Id,
-                ThumbnailLink = volume.VolumeInfo.ImageLinks?.Thumbnail,
-                Title = volume.VolumeInfo.Title,
-                Authors = volumeAuthors,
-                SearchResultType = SearchResultType.GoogleBookApi
-            });
-        }
+        var searchResults = MapSearchBookViewModels(tempResponse);
 
         return searchResults;
     }
@@ -144,13 +152,13 @@ public class BookService : IBookService
     {
         var bookRequestUri = $"{_configuration["ApiAddresses:GoogleBooksUrl"]}?q=intitle:{request}";
         var authorRequestUri = $"{_configuration["ApiAddresses:GoogleBooksUrl"]}?q=inauthor:{request}";
-        var requestResults = await Task.WhenAll(
+        var partialSearchResults = await Task.WhenAll(
             SearchInDbByAuthorAsync(request),
             SearchInApiAsync(bookRequestUri),
             SearchInApiAsync(authorRequestUri));
         var result = await SearchInDbByTitleAsync(request);
-        _logger.LogInfo($"Found books from api and database");
-        foreach (var res in requestResults)
+        _logger.LogInfo("Found books from api and database");
+        foreach (var res in partialSearchResults)
         {
             result = result.Concat(res);
         }
@@ -159,7 +167,7 @@ public class BookService : IBookService
 
     private List<string> FindMissingProperties(VolumeViewModel volumeViewModel)
     {
-        var missingPropertiesTemplate = new List<string>();
+        var missingProperties = new List<string>();
         foreach (var prop in volumeViewModel.VolumeInfo.GetType().GetProperties())
         {
             switch (prop.GetValue(volumeViewModel.VolumeInfo))
@@ -167,13 +175,13 @@ public class BookService : IBookService
                 case string property:
                     if (string.IsNullOrEmpty(property))
                     {
-                        missingPropertiesTemplate.Add(prop.Name);
+                        missingProperties.Add(prop.Name);
                     }
                     break;
                 case IEnumerable<string> property:
                     if (!property.Any())
                     {
-                        missingPropertiesTemplate.Add(prop.Name);
+                        missingProperties.Add(prop.Name);
                     }
                     break;
                 case ImageLinksViewModel imageLinksProperty:
@@ -188,16 +196,13 @@ public class BookService : IBookService
                     }
                     if (!notNullImages.Any())
                     {
-                        missingPropertiesTemplate.Add(prop.Name);
+                        missingProperties.Add(prop.Name);
                     }
-                    break;
-                default:
-                    Console.WriteLine();
                     break;
             }
         }
 
-        return missingPropertiesTemplate;
+        return missingProperties;
     }
 
     private async Task<IEnumerable<BookCategory>> MapCategories(
@@ -208,7 +213,10 @@ public class BookService : IBookService
         var categories = await _categoryRepository.QueryAsync();
         foreach (var categoryName in categoryNames)
         {
-            var words = categoryName.ToUpper().Split('/', StringSplitOptions.RemoveEmptyEntries).Reverse();
+            var words = categoryName
+                .ToUpper()
+                .Split('/', StringSplitOptions.TrimEntries)
+                .Reverse();
             foreach (var word in words)
             {
                 foreach (var category in categories)
@@ -225,6 +233,17 @@ public class BookService : IBookService
                 }
             }
         }
+
+        if (result.Count != 0) 
+            return result;
+        
+        var uncategorized = categories.FirstOrDefault(cat => cat.Name == "Uncategorized")!; 
+        result.Add(new BookCategory()
+        {
+            Book = creatingBook,
+            Category = uncategorized,
+            CategoryId = uncategorized.Id
+        });
         return result;
     }
 
@@ -254,7 +273,7 @@ public class BookService : IBookService
     {
         var possiblePublisher = (await _publisherRepository
             .QueryAsync())
-            .FirstOrDefault(pub => pub.Name.Normalize() == name.Normalize());
+            .FirstOrDefault(pub => pub.Name.ToUpper() == name.ToUpper());
         if (possiblePublisher is null)
         {
             var newPublisher = new Publisher()
@@ -292,7 +311,6 @@ public class BookService : IBookService
                     });
                 }
             }
-
             if (hasFound) continue;
             
             var newWriter = new Writer()
