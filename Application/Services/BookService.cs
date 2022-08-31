@@ -160,35 +160,6 @@ public class BookService : IBookService
     private List<string> FindMissingProperties(VolumeViewModel volumeViewModel)
     {
         var missingPropertiesTemplate = new List<string>();
-        // if (!volumeViewModel.VolumeInfo.Authors.Any())
-        // {
-        //     missingPropertiesTemplate.Add(nameof(volumeViewModel.VolumeInfo.Authors));
-        // }
-        // if (!volumeViewModel.VolumeInfo.Categories.Any())
-        // {
-        //     missingPropertiesTemplate.Add(nameof(volumeViewModel.VolumeInfo.Categories));
-        // }        
-        // if (string.IsNullOrEmpty(volumeViewModel.VolumeInfo.Description))
-        // {
-        //     missingPropertiesTemplate.Add(nameof(volumeViewModel.VolumeInfo.Description));
-        // }
-        // if (string.IsNullOrEmpty(volumeViewModel.VolumeInfo.Publisher))
-        // {
-        //     missingPropertiesTemplate.Add(nameof(volumeViewModel.VolumeInfo.Publisher));
-        // }
-        // if (string.IsNullOrEmpty(volumeViewModel.VolumeInfo.Language))
-        // {
-        //     missingPropertiesTemplate.Add(nameof(volumeViewModel.VolumeInfo.Language));
-        // }
-        // if (string.IsNullOrEmpty(volumeViewModel.VolumeInfo.Title))
-        // {
-        //     missingPropertiesTemplate.Add(nameof(volumeViewModel.VolumeInfo.Title));
-        // }
-        // if (string.IsNullOrEmpty(volumeViewModel.VolumeInfo.ImageLinks.GetType().))
-        // {
-        //     missingPropertiesTemplate.Add(nameof(volumeViewModel.VolumeInfo.Publisher));
-        // }
-        
         foreach (var prop in volumeViewModel.VolumeInfo.GetType().GetProperties())
         {
             switch (prop.GetValue(volumeViewModel.VolumeInfo))
@@ -219,7 +190,6 @@ public class BookService : IBookService
                     {
                         missingPropertiesTemplate.Add(prop.Name);
                     }
-                    //TODO: somehow use these notNullImages
                     break;
                 default:
                     Console.WriteLine();
@@ -238,12 +208,12 @@ public class BookService : IBookService
         var categories = await _categoryRepository.QueryAsync();
         foreach (var categoryName in categoryNames)
         {
-            var words = categoryName.Normalize().Split('/', StringSplitOptions.RemoveEmptyEntries).Reverse();
+            var words = categoryName.ToUpper().Split('/', StringSplitOptions.RemoveEmptyEntries).Reverse();
             foreach (var word in words)
             {
                 foreach (var category in categories)
                 {
-                    if (category.Name.Normalize().Contains(word))
+                    if (category.Name.ToUpper().Contains(word))
                     {
                         result.Add(new BookCategory()
                         {
@@ -268,11 +238,6 @@ public class BookService : IBookService
             var value = imageLinkProp.GetValue(imageLinksViewModel) as string;
             if (!string.IsNullOrEmpty(value))
             {
-                // await _pictureRepository.InsertAsync(new Picture()
-                // {
-                //     Book = creatingBook,
-                //     FullPath = value
-                // });
                 result.Add(new Picture()
                 {
                     Book = creatingBook,
@@ -285,8 +250,7 @@ public class BookService : IBookService
     }
 
     private async Task<Publisher> MapPublisher(
-        string name,
-        Book creatingBook)
+        string name)
     {
         var possiblePublisher = (await _publisherRepository
             .QueryAsync())
@@ -296,7 +260,6 @@ public class BookService : IBookService
             var newPublisher = new Publisher()
             {
                 Name = name,
-                //Books = new List<Book>(){creatingBook}
             };
             await _publisherRepository.InsertAsync(newPublisher);
             await _publisherRepository.SaveChangesAsync();
@@ -365,7 +328,7 @@ public class BookService : IBookService
         newBook.Description = volumeViewModel.VolumeInfo.Description;
         newBook.Language = volumeViewModel.VolumeInfo.Language;
         newBook.Pictures = MapPictures(volumeViewModel.VolumeInfo.ImageLinks!, newBook);
-        newBook.Publisher = await MapPublisher(volumeViewModel.VolumeInfo.Publisher, newBook);
+        newBook.Publisher = await MapPublisher(volumeViewModel.VolumeInfo.Publisher);
         newBook.BookWriters = await MapBookWriters(volumeViewModel.VolumeInfo.Authors, newBook);
         newBook.BookCategories = await MapCategories(volumeViewModel.VolumeInfo.Categories, newBook);
         newBook.Isbn = MapIsbn(volumeViewModel.VolumeInfo.IndustryIdentifiers);
