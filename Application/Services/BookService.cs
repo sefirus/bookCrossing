@@ -105,13 +105,13 @@ public class BookService : IBookService
                     bookAuthors = $"{bookAuthors}{authorsList[i]}, ";
                 }
             }
-            searchResults.Add(new SearchBookViewModel()
-            {
-                Id = book.Id.ToString(),
-                Authors = bookAuthors,
-                SearchResultType = SearchResultType.Database,
-                ThumbnailLink = book.Pictures.First().FullPath
-            });
+
+            var vm = new SearchBookViewModel();
+            vm.Id = book.Id.ToString();
+            vm.Authors = bookAuthors;
+            vm.SearchResultType = SearchResultType.Database;
+            vm.ThumbnailLink = book.Pictures.FirstOrDefault()?.FullPath; 
+            searchResults.Add(vm);
         }
 
         return searchResults;
@@ -355,11 +355,11 @@ public class BookService : IBookService
         return newBook;
     }
     
-    public async Task AddBookToLibraryAsync(SearchBookViewModel viewModel)
+    public async Task<Book> AddBookToLibraryAsync(SearchBookViewModel viewModel)
     {
         if (viewModel.SearchResultType == SearchResultType.Database)
         {
-            return;
+            throw new InvalidOperationException();
         }
 
         var bookUrl = $"{_configuration["ApiAddresses:GoogleBooksUrl"]}/{viewModel.Id}";
@@ -369,5 +369,12 @@ public class BookService : IBookService
         var newBook = await MapVolumeToBook(volume);
         await _bookRepository.InsertAsync(newBook);
         await _bookRepository.SaveChangesAsync();
+        return newBook;
+    }
+
+    public async Task<Book> GetBookByViewModel(SearchBookViewModel viewModel)
+    {
+        var book = await _bookRepository.GetFirstOrDefaultAsync();
+        return book;
     }
 }
